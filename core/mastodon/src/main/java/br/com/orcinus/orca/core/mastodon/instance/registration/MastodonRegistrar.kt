@@ -28,7 +28,7 @@ import br.com.orcinus.orca.core.instance.registration.Registrar
  * @param context [Context] in which the [MastodonRegistrationActivity] that's responsible for
  *   displaying the webpage to be interacted with will be started.
  */
-internal class MastodonRegistrar(private val context: Context) : Registrar() {
+class MastodonRegistrar(private val context: Context) : Registrar() {
   override val domains = MastodonRegistrationWebpageInteractorProvider.domains
 
   @Throws(MastodonRegistrationWebpageInteractorProvider.Companion.UnknownDomainException::class)

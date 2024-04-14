@@ -32,7 +32,6 @@ dependencies {
   implementation(libs.android.fragment.ktx)
 
   testImplementation(project(":platform:navigation-test"))
-  testImplementation(libs.assertk)
   testImplementation(libs.kotlin.test)
   testImplementation(libs.robolectric)
 }

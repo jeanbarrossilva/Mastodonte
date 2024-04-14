@@ -19,9 +19,11 @@ import br.com.orcinus.orca.core.InternalCoreApi
 import br.com.orcinus.orca.core.auth.AuthenticationLock
 import br.com.orcinus.orca.core.auth.SomeAuthenticationLock
 import br.com.orcinus.orca.core.auth.actor.Actor
+import br.com.orcinus.orca.core.feed.profile.account.Account
 import br.com.orcinus.orca.core.feed.profile.post.content.TermMuter
 import br.com.orcinus.orca.core.instance.Instance
 import br.com.orcinus.orca.core.instance.InstanceProvider
+import br.com.orcinus.orca.core.instance.registration.Registrar
 import br.com.orcinus.orca.std.injector.module.Inject
 import br.com.orcinus.orca.std.injector.module.Module
 import br.com.orcinus.orca.std.injector.module.injection.Injection
@@ -33,6 +35,7 @@ import br.com.orcinus.orca.std.injector.module.injection.Injection
  *   currently [authenticated][Actor.Authenticated] [Actor] is.
  * @param authenticationLock [AuthenticationLock] that will lock authentication-dependent
  *   functionality behind a "wall".
+ * @param registrar [Registrar] for registering an [Account].
  * @param termMuter [TermMuter] by which terms will be muted.
  */
 open class CoreModule
@@ -40,5 +43,6 @@ open class CoreModule
 constructor(
   @Inject internal val instanceProvider: Injection<InstanceProvider>,
   @Inject internal val authenticationLock: Injection<SomeAuthenticationLock>,
+  @Inject internal val registrar: Injection<Registrar>,
   @Inject internal val termMuter: Injection<TermMuter>
 ) : Module()

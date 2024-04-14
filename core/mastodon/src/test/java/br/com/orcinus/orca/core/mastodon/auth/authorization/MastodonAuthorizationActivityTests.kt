@@ -29,6 +29,7 @@ import br.com.orcinus.orca.core.mastodon.auth.authorization.viewmodel.MastodonAu
 import br.com.orcinus.orca.core.module.CoreModule
 import br.com.orcinus.orca.core.sample.feed.profile.post.content.SampleTermMuter
 import br.com.orcinus.orca.core.sample.instance.domain.sample
+import br.com.orcinus.orca.core.sample.instance.registration.SampleRegistrar
 import br.com.orcinus.orca.platform.autos.test.kit.input.text.onTextFieldErrors
 import br.com.orcinus.orca.platform.core.sample
 import br.com.orcinus.orca.platform.intents.test.intendBrowsingTo
@@ -49,6 +50,7 @@ internal class MastodonAuthorizationActivityTests {
       CoreModule(
         injectionOf { InstanceProvider.sample },
         injectionOf { Instance.sample.authenticationLock },
+        injectionOf { SampleRegistrar },
         injectionOf { SampleTermMuter() }
       )
     )

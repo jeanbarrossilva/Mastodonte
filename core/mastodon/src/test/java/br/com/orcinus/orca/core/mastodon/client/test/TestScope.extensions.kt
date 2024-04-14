@@ -20,11 +20,16 @@ import br.com.orcinus.orca.core.auth.actor.Actor
 import br.com.orcinus.orca.core.auth.actor.ActorProvider
 import br.com.orcinus.orca.core.mastodon.MastodonCoreModule
 import br.com.orcinus.orca.core.mastodon.client.MastodonClient
+import br.com.orcinus.orca.core.mastodon.client.authenticateAndGet
+import br.com.orcinus.orca.core.mastodon.client.authenticateAndPost
+import br.com.orcinus.orca.core.mastodon.client.authenticateAndSubmitForm
+import br.com.orcinus.orca.core.mastodon.client.authenticateAndSubmitFormWithBinaryData
 import br.com.orcinus.orca.core.mastodon.client.test.instance.TestMastodonInstance
 import br.com.orcinus.orca.core.mastodon.client.test.instance.TestMastodonInstanceProvider
 import br.com.orcinus.orca.core.module.CoreModule
 import br.com.orcinus.orca.core.sample.auth.actor.sample
 import br.com.orcinus.orca.core.sample.feed.profile.post.content.SampleTermMuter
+import br.com.orcinus.orca.core.sample.instance.registration.SampleRegistrar
 import br.com.orcinus.orca.core.test.TestActorProvider
 import br.com.orcinus.orca.core.test.TestAuthenticator
 import br.com.orcinus.orca.core.test.TestAuthorizer
@@ -109,10 +114,10 @@ internal fun runUnauthenticatedTest(
  *   and that is in the [MastodonClientTestScope] given to the [body].
  * @param body Callback run when the environment has been set up and is, therefore, ready to be
  *   used.
- * @see HttpClient.authenticateAndGet
- * @see HttpClient.authenticateAndPost
- * @see HttpClient.authenticateAndSubmitForm
- * @see HttpClient.authenticateAndSubmitFormWithBinaryData
+ * @see authenticateAndGet
+ * @see authenticateAndPost
+ * @see authenticateAndSubmitForm
+ * @see authenticateAndSubmitFormWithBinaryData
  */
 private fun <T : Actor> runCoreHttpClientTest(
   actor: T,
@@ -128,6 +133,7 @@ private fun <T : Actor> runCoreHttpClientTest(
     MastodonCoreModule(
       injectionOf { TestMastodonInstanceProvider(authorizer, authenticator, authenticationLock) },
       injectionOf { authenticationLock },
+      injectionOf { SampleRegistrar },
       injectionOf { SampleTermMuter() }
     )
   Injector.register<CoreModule>(module)

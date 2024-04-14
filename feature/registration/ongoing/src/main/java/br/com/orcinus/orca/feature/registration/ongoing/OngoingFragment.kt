@@ -15,15 +15,33 @@
 
 package br.com.orcinus.orca.feature.registration.ongoing
 
+import android.os.Bundle
 import androidx.compose.runtime.Composable
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import br.com.orcinus.orca.composite.composable.ComposableFragment
 import br.com.orcinus.orca.platform.navigation.Navigator
+import br.com.orcinus.orca.platform.navigation.argument
 import br.com.orcinus.orca.platform.navigation.transition.opening
+import br.com.orcinus.orca.std.injector.Injector
 
-internal class OngoingFragment : ComposableFragment() {
+internal class OngoingFragment private constructor() : ComposableFragment() {
+  private val module by lazy { Injector.from<OngoingModule>() }
+  private val email by argument<String>(EMAIL_KEY)
+  private val password by argument<String>(PASSWORD_KEY)
   private val viewModel by
-    viewModels<OngoingViewModel>(factoryProducer = OngoingViewModel::createFactory)
+    viewModels<OngoingViewModel> {
+      OngoingViewModel.createFactory(module.registrar(), email, password)
+    }
+
+  constructor(email: String, password: String) : this() {
+    arguments = bundleOf(EMAIL_KEY to email, PASSWORD_KEY to password)
+  }
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    viewModel.register()
+  }
 
   @Composable
   override fun Content() {
@@ -31,10 +49,13 @@ internal class OngoingFragment : ComposableFragment() {
   }
 
   companion object {
-    const val ROUTE = "ONGOING"
+    private const val EMAIL_KEY = "email"
+    private const val PASSWORD_KEY = "password"
 
-    fun navigate(navigator: Navigator) {
-      navigator.navigate(opening()) { to(ROUTE, ::OngoingFragment) }
+    const val ROUTE = "ongoing"
+
+    fun navigate(navigator: Navigator, email: String, password: String) {
+      navigator.navigate(opening()) { to(ROUTE) { OngoingFragment(email, password) } }
     }
   }
 }

@@ -29,10 +29,10 @@ android {
 dependencies {
   api(libs.android.fragment.testing)
   api(libs.android.test.core)
+  api(libs.assertk)
 
   implementation(project(":ext:reflection"))
   implementation(project(":platform:navigation"))
-  implementation(libs.assertk)
   implementation(libs.kotlin.reflect)
 
   testImplementation(project(":platform:testing"))

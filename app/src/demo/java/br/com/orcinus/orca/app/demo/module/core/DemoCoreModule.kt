@@ -18,6 +18,7 @@ package br.com.orcinus.orca.app.demo.module.core
 import br.com.orcinus.orca.core.instance.InstanceProvider
 import br.com.orcinus.orca.core.module.CoreModule
 import br.com.orcinus.orca.core.sample.feed.profile.post.content.SampleTermMuter
+import br.com.orcinus.orca.core.sample.instance.registration.SampleRegistrar
 import br.com.orcinus.orca.platform.core.sample
 import br.com.orcinus.orca.std.injector.module.injection.injectionOf
 
@@ -25,5 +26,6 @@ internal object DemoCoreModule :
   CoreModule(
     injectionOf { InstanceProvider.sample },
     injectionOf { InstanceProvider.sample.provide().authenticationLock },
+    injectionOf { SampleRegistrar },
     injectionOf { SampleTermMuter() }
   )

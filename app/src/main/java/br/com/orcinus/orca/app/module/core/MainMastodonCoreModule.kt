@@ -21,6 +21,7 @@ import br.com.orcinus.orca.core.mastodon.MastodonCoreModule
 import br.com.orcinus.orca.core.mastodon.auth.authentication.MastodonAuthenticator
 import br.com.orcinus.orca.core.mastodon.auth.authorization.MastodonAuthorizer
 import br.com.orcinus.orca.core.mastodon.instance.MastodonInstanceProvider
+import br.com.orcinus.orca.core.mastodon.instance.registration.MastodonRegistrar
 import br.com.orcinus.orca.core.sharedpreferences.actor.SharedPreferencesActorProvider
 import br.com.orcinus.orca.core.sharedpreferences.feed.profile.post.content.SharedPreferencesTermMuter
 import br.com.orcinus.orca.std.image.compose.async.AsyncImageLoader
@@ -41,6 +42,7 @@ internal object MainMastodonCoreModule :
       )
     },
     injectionOf { MainMastodonCoreModule.authenticationLock },
+    injectionOf { MastodonRegistrar(MainMastodonCoreModule.context) },
     injectionOf { MainMastodonCoreModule.termMuter }
   ) {
   private val actorProvider by lazy {

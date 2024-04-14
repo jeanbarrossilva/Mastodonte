@@ -20,6 +20,7 @@ import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.scaleIn
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,39 +34,41 @@ import androidx.compose.ui.res.stringResource
 import br.com.orcinus.orca.composite.status.Status
 import br.com.orcinus.orca.composite.status.StatusCard
 import br.com.orcinus.orca.composite.status.state.rememberStatusCardState
-import br.com.orcinus.orca.core.instance.domain.Domain
-import br.com.orcinus.orca.core.sample.instance.domain.sample
-import br.com.orcinus.orca.core.sample.instance.domain.samples
+import br.com.orcinus.orca.core.instance.registration.Registration
+import br.com.orcinus.orca.core.sample.instance.registration.sample
 import br.com.orcinus.orca.platform.autos.kit.scaffold.Scaffold
 import br.com.orcinus.orca.platform.autos.template.onboarding.Onboarding
 import br.com.orcinus.orca.platform.autos.theme.AutosTheme
 import br.com.orcinus.orca.platform.autos.theme.MultiThemePreview
 import br.com.orcinus.orca.platform.stack.Stack
 import br.com.orcinus.orca.platform.stack.StackScope
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
+import com.jeanbarrossilva.loadable.Loadable
 
 @Composable
 internal fun Ongoing(viewModel: OngoingViewModel, modifier: Modifier = Modifier) {
-  val indexedDomain by viewModel.indexedDomainFlow.collectAsState()
-  Ongoing(indexedDomain, OngoingViewModel.perDomainDelay, modifier)
+  when (val registrationLoadable = viewModel.registrationLoadableFlow.collectAsState().value) {
+    is Loadable.Loading -> Ongoing(modifier)
+    is Loadable.Loaded -> Ongoing(registrationLoadable.content, modifier)
+    is Loadable.Failed -> Unit
+  }
 }
 
 @Composable
-private fun Ongoing(
-  indexedDomain: IndexedValue<Domain>?,
-  perDomainDelay: Duration,
-  modifier: Modifier = Modifier
-) {
+private fun Ongoing(modifier: Modifier = Modifier) {
+  Ongoing(modifier) { CircularProgressIndicator() }
+}
+
+@Composable
+private fun Ongoing(registration: Registration, modifier: Modifier = Modifier) {
   var statusCardStackScope by remember { mutableStateOf<StackScope?>(null) }
-  val statusCardAnimationSpec = tween<Float>()
+  val statusCardAnimationSpec = remember { tween<Float>() }
   val statusCardEnterTransition =
     remember(statusCardAnimationSpec) {
       fadeIn(statusCardAnimationSpec) + scaleIn(statusCardAnimationSpec, initialScale = .8f)
     }
 
-  LaunchedEffect(indexedDomain, statusCardStackScope, statusCardEnterTransition) {
-    if (statusCardStackScope != null && indexedDomain != null) {
+  LaunchedEffect(registration, statusCardStackScope, statusCardEnterTransition) {
+    if (statusCardStackScope != null) {
       statusCardStackScope?.item {
         AnimatedVisibility(
           remember { MutableTransitionState(false).apply { targetState = true } },
@@ -73,26 +76,25 @@ private fun Ongoing(
         ) {
           StatusCard(
             rememberStatusCardState(
-              targetStatus =
-                if (indexedDomain.index == Domain.samples.lastIndex) {
-                  Status.Succeeded
-                } else {
-                  Status.Failed
-                },
-              perDomainDelay / 2
+              targetStatus = if (registration.hasSucceeded) Status.Succeeded else Status.Failed
             )
           ) {
-            Text("${indexedDomain.value}")
+            Text("${registration.domain}")
           }
         }
       }
     }
   }
 
+  Ongoing(modifier) { Stack { statusCardStackScope = this } }
+}
+
+@Composable
+private fun Ongoing(modifier: Modifier = Modifier, illustration: @Composable () -> Unit) {
   Scaffold(modifier) {
     expanded {
       Onboarding(
-        illustration = { Stack { statusCardStackScope = this } },
+        illustration,
         title = { Text(stringResource(R.string.feature_registration_ongoing)) },
         description = { Text(stringResource(R.string.feature_registration_ongoing_description)) },
         contentPadding = it
@@ -103,6 +105,12 @@ private fun Ongoing(
 
 @Composable
 @MultiThemePreview
-private fun OngoingPreview() {
-  AutosTheme { Ongoing(IndexedValue(0, Domain.sample), perDomainDelay = 4.seconds) }
+private fun LoadingOngoingPreview() {
+  AutosTheme { Ongoing() }
+}
+
+@Composable
+@MultiThemePreview
+private fun LoadedOngoingPreview() {
+  AutosTheme { Ongoing(Registration.sample) }
 }

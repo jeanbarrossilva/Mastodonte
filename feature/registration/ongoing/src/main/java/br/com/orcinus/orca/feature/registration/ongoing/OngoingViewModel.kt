@@ -20,33 +20,42 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import br.com.orcinus.orca.core.instance.domain.Domain
-import br.com.orcinus.orca.core.sample.instance.domain.samples
-import kotlin.time.Duration.Companion.seconds
-import kotlinx.coroutines.delay
+import br.com.orcinus.orca.core.instance.registration.Registrar
+import br.com.orcinus.orca.core.instance.registration.Registration
+import com.jeanbarrossilva.loadable.Loadable
+import com.jeanbarrossilva.loadable.flow.loadable
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.withIndex
+import kotlinx.coroutines.launch
 
-internal class OngoingViewModel : ViewModel() {
-  val indexedDomainFlow =
-    Domain.samples
-      .asFlow()
-      .withIndex()
-      .onEach { (index, _) ->
-        if (index > 0) {
-          delay(perDomainDelay)
-        }
-      }
-      .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), initialValue = null)
+internal class OngoingViewModel(
+  private val registrar: Registrar,
+  private val email: String,
+  private val password: String
+) : ViewModel() {
+  private val registrationLoadableMutableFlow = MutableSharedFlow<Loadable<Registration>>()
+
+  val registrationLoadableFlow =
+    registrationLoadableMutableFlow.stateIn(
+      viewModelScope,
+      SharingStarted.WhileSubscribed(),
+      Loadable.Loading()
+    )
+
+  fun register() {
+    viewModelScope.launch {
+      registrar.register(email, password).loadable(this).collect(registrationLoadableMutableFlow)
+    }
+  }
 
   companion object {
-    val perDomainDelay = 4.seconds
-
-    fun createFactory(): ViewModelProvider.Factory {
-      return viewModelFactory { initializer { OngoingViewModel() } }
+    fun createFactory(
+      registrar: Registrar,
+      email: String,
+      password: String
+    ): ViewModelProvider.Factory {
+      return viewModelFactory { initializer { OngoingViewModel(registrar, email, password) } }
     }
   }
 }

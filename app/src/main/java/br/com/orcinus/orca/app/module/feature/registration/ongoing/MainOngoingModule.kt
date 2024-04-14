@@ -13,21 +13,13 @@
  * not, see https://www.gnu.org/licenses.
  */
 
-package br.com.orcinus.orca.core.instance.registration
+package br.com.orcinus.orca.app.module.feature.registration.ongoing
 
-import br.com.orcinus.orca.core.InternalCoreApi
-import br.com.orcinus.orca.core.feed.profile.account.Account
-import br.com.orcinus.orca.core.instance.Instance
-import br.com.orcinus.orca.core.instance.domain.Domain
+import br.com.orcinus.orca.core.module.CoreModule
+import br.com.orcinus.orca.core.module.registrar
+import br.com.orcinus.orca.feature.registration.ongoing.OngoingModule
+import br.com.orcinus.orca.std.injector.Injector
+import br.com.orcinus.orca.std.injector.module.injection.injectionOf
 
-/**
- * Result of an attempt to register an [Account].
- *
- * @param domain [Domain] of the [Instance] at which registration was tried.
- * @param hasSucceeded Whether registration has been performed successfully.
- */
-data class Registration
-@InternalCoreApi
-constructor(val domain: Domain, val hasSucceeded: Boolean) {
-  companion object
-}
+internal object MainOngoingModule :
+  OngoingModule(injectionOf { Injector.from<CoreModule>().registrar() })

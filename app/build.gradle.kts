@@ -79,7 +79,6 @@ dependencies {
   "androidTestDemoImplementation"(project(":platform:navigation-test"))
   "androidTestDemoImplementation"(project(":platform:testing"))
   "androidTestDemoImplementation"(project(":platform:testing:compose"))
-  "androidTestDemoImplementation"(libs.assertk)
   "androidTestDemoImplementation"(libs.android.compose.ui.test.manifest)
 
   "demoImplementation"(project(":platform:core"))
@@ -93,6 +92,7 @@ dependencies {
   implementation(project(":feature:gallery"))
   implementation(project(":feature:post-details"))
   implementation(project(":feature:profile-details"))
+  implementation(project(":feature:registration:ongoing"))
   implementation(project(":feature:search"))
   implementation(project(":feature:settings"))
   implementation(project(":feature:settings:term-muting"))
@@ -117,7 +117,6 @@ dependencies {
   "testDemoImplementation"(project(":platform:navigation-test"))
   "testDemoImplementation"(project(":platform:testing"))
   "testDemoImplementation"(libs.android.test.espresso.core)
-  "testDemoImplementation"(libs.assertk)
   "testDemoImplementation"(libs.kotlin.test)
   "testDemoImplementation"(libs.openTest4J)
   "testDemoImplementation"(libs.robolectric)

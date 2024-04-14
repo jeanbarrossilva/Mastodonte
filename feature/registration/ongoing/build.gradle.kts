@@ -16,15 +16,22 @@
 plugins {
   alias(libs.plugins.android.library)
   alias(libs.plugins.kotlin.android)
+  alias(libs.plugins.kotlin.symbolProcessor)
 }
 
 android {
   buildFeatures.compose = true
   composeOptions.kotlinCompilerExtensionVersion = libs.versions.android.compose.compiler.get()
+  defaultConfig.testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   testOptions.unitTests.isIncludeAndroidResources = true
 }
 
 dependencies {
+  androidTestImplementation(project(":platform:navigation-test"))
+  androidTestImplementation(project(":std:injector-test"))
+  androidTestImplementation(libs.android.test.runner)
+  androidTestImplementation(libs.kotlin.test)
+
   api(project(":composite:composable"))
   api(project(":platform:navigation"))
 
@@ -33,9 +40,13 @@ dependencies {
   implementation(project(":platform:autos"))
   implementation(project(":platform:stack"))
   implementation(libs.android.fragment.ktx)
+  implementation(libs.loadable)
 
-  testImplementation(project(":platform:navigation-test"))
+  ksp(project(":std:injector-processor"))
+
   testImplementation(libs.assertk)
+  testImplementation(libs.kotlin.coroutines.test)
   testImplementation(libs.kotlin.test)
   testImplementation(libs.robolectric)
+  testImplementation(libs.turbine)
 }

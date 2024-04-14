@@ -16,20 +16,30 @@
 package br.com.orcinus.orca.feature.registration.ongoing
 
 import assertk.assertThat
+import br.com.orcinus.orca.core.instance.registration.Credentials
+import br.com.orcinus.orca.core.sample.instance.registration.SampleRegistrar
+import br.com.orcinus.orca.core.sample.instance.registration.sample
 import br.com.orcinus.orca.platform.navigation.navigator
 import br.com.orcinus.orca.platform.navigation.test.activity.launchNavigationActivity
 import br.com.orcinus.orca.platform.navigation.test.isAt
+import br.com.orcinus.orca.std.injector.module.injection.injectionOf
+import br.com.orcinus.orca.std.injector.test.InjectorTestRule
 import kotlin.test.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
+import org.junit.Rule
 
-@RunWith(RobolectricTestRunner::class)
 internal class OngoingFragmentTests {
+  @get:Rule
+  val injectorRule = InjectorTestRule { register(OngoingModule(injectionOf { SampleRegistrar })) }
+
   @Test
   fun navigates() {
     launchNavigationActivity().use { scenario ->
       scenario.onActivity { activity ->
-        OngoingFragment.navigate(activity.navigator)
+        OngoingFragment.navigate(
+          activity.navigator,
+          Credentials.sample.email,
+          Credentials.sample.password
+        )
         assertThat(activity).isAt(OngoingFragment.ROUTE)
       }
     }

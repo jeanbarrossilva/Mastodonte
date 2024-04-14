@@ -15,23 +15,17 @@
 
 package br.com.orcinus.orca.core.sample.instance.registration
 
-import br.com.orcinus.orca.core.instance.Instance
 import br.com.orcinus.orca.core.instance.domain.Domain
-import br.com.orcinus.orca.core.instance.registration.Credentials
-import br.com.orcinus.orca.core.instance.registration.Registrar
 import br.com.orcinus.orca.core.instance.registration.Registration
 import br.com.orcinus.orca.core.sample.instance.domain.sample
-import br.com.orcinus.orca.core.sample.instance.domain.samples
+
+/** [Registration] returned by [Registration.Companion.sample]. */
+private val sampleRegistration = Registration(Domain.sample, hasSucceeded = true)
 
 /**
- * [Registrar] that emits a successful [Registration] for the sample [Instance]'s [Domain].
+ * [Registration] at the sample [Domain].
  *
- * @see Instance.domain
+ * @see Domain.Companion.sample
  */
-object SampleRegistrar : Registrar() {
-  override val domains = Domain.samples
-
-  override suspend fun register(credentials: Credentials, domain: Domain): Boolean {
-    return domain == Domain.sample
-  }
-}
+val Registration.Companion.sample
+  get() = sampleRegistration
