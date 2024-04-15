@@ -24,8 +24,10 @@ import androidx.compose.ui.test.performTextInput
 import br.com.orcinus.orca.core.instance.Instance
 import br.com.orcinus.orca.core.instance.InstanceProvider
 import br.com.orcinus.orca.core.instance.domain.Domain
+import br.com.orcinus.orca.core.mastodon.MastodonCoreModule
 import br.com.orcinus.orca.core.mastodon.R
 import br.com.orcinus.orca.core.mastodon.auth.authorization.viewmodel.MastodonAuthorizationViewModel
+import br.com.orcinus.orca.core.mastodon.test.auth.authorization.onRegisterButton
 import br.com.orcinus.orca.core.module.CoreModule
 import br.com.orcinus.orca.core.sample.feed.profile.post.content.SampleTermMuter
 import br.com.orcinus.orca.core.sample.instance.domain.sample
@@ -37,6 +39,8 @@ import br.com.orcinus.orca.platform.testing.asString
 import br.com.orcinus.orca.platform.testing.context
 import br.com.orcinus.orca.std.injector.module.injection.injectionOf
 import br.com.orcinus.orca.std.injector.test.InjectorTestRule
+import io.mockk.mockkObject
+import io.mockk.verify
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -46,12 +50,13 @@ import org.robolectric.RobolectricTestRunner
 internal class MastodonAuthorizationActivityTests {
   @get:Rule
   val injectorRule = InjectorTestRule {
-    register(
-      CoreModule(
+    register<CoreModule>(
+      MastodonCoreModule(
         injectionOf { InstanceProvider.sample },
         injectionOf { Instance.sample.authenticationLock },
         injectionOf { SampleRegistrar },
-        injectionOf { SampleTermMuter() }
+        injectionOf { SampleTermMuter() },
+        injectionOf { NoOpMastodonAuthorizationBoundary }
       )
     )
   }
@@ -87,9 +92,10 @@ internal class MastodonAuthorizationActivityTests {
   }
 
   @Test
-  fun browsesToHelpArticle() {
-    intendBrowsingTo("${MastodonAuthorizationActivity.helpUri}") {
-      composeRule.onNodeWithText(R.string.core_http_authorization_help.asString()).performClick()
+  fun navigatesToRegistrationWhenRequested() {
+    mockkObject(NoOpMastodonAuthorizationBoundary) {
+      composeRule.onRegisterButton().performClick()
+      verify { NoOpMastodonAuthorizationBoundary.navigateToRegistration() }
     }
   }
 

@@ -42,7 +42,11 @@ import br.com.orcinus.orca.platform.autos.theme.AutosTheme
 import br.com.orcinus.orca.platform.autos.theme.MultiThemePreview
 
 @Composable
-internal fun Credentials(viewModel: CredentialsViewModel, modifier: Modifier = Modifier) {
+internal fun Credentials(
+  viewModel: CredentialsViewModel,
+  onSubmission: () -> Unit,
+  modifier: Modifier = Modifier
+) {
   val email by viewModel.emailFlow.collectAsState()
   val password by viewModel.passwordFlow.collectAsState()
 
@@ -51,6 +55,7 @@ internal fun Credentials(viewModel: CredentialsViewModel, modifier: Modifier = M
     onEmailChange = viewModel::setEmail,
     password,
     onPasswordChange = viewModel::setPassword,
+    onSubmission,
     modifier
   )
 }
@@ -61,6 +66,7 @@ private fun Credentials(
   onEmailChange: (email: String) -> Unit,
   password: String,
   onPasswordChange: (password: String) -> Unit,
+  onSubmission: () -> Unit,
   modifier: Modifier = Modifier
 ) {
   val spacing = AutosTheme.spacings.large.dp
@@ -70,7 +76,7 @@ private fun Credentials(
     modifier,
     bottom = {
       ButtonBar {
-        PrimaryButton(onClick = {}) {
+        PrimaryButton(onClick = onSubmission) {
           Text(stringResource(R.string.feature_registration_credentials_confirm))
         }
       }
@@ -131,7 +137,8 @@ private fun CredentialsPreview() {
       email = "jean@orcinus.com.br",
       onEmailChange = {},
       password = "password123",
-      onPasswordChange = {}
+      onPasswordChange = {},
+      onSubmission = {}
     )
   }
 }

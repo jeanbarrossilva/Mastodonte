@@ -19,12 +19,12 @@
     <string name="core_http_authorization_account_origin">De onde é a sua conta?</string>
     <string name="core_http_authorization_domain">Instância</string>
     <string name="core_http_authorization_empty_domain">A instância não pode estar vazia.</string>
-    <string name="core_http_authorization_help">Eu não tenho uma conta</string>
     <string name="core_http_authorization_invalid_domain">
         Infelizmente, essa não é uma instância válida.
     </string>
     <string name="core_http_authorization_sign_in">Entrar</string>
     <string name="core_http_authorization_welcome">Bem-vindo!</string>
+    <string name="core_mastodon_authorization_register">Eu não tenho uma conta</string>
     <string name="core_mastodon_close_tab">Fechar aba</string>
     <string name="core_mastodon_share">Compartilhar</string>
 </resources>

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2023–2024 Orcinus
+ * Copyright © 2024 Orcinus
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -13,13 +13,15 @@
  * not, see https://www.gnu.org/licenses.
  */
 
-package br.com.orcinus.orca.app.demo
+package br.com.orcinus.orca.app.module.core.mastodon
 
-import br.com.orcinus.orca.app.activity.OrcaActivity
-import br.com.orcinus.orca.app.demo.module.core.DemoCoreModule
-import br.com.orcinus.orca.core.module.CoreModule
-import br.com.orcinus.orca.std.injector.module.binding.boundTo
+import br.com.orcinus.orca.core.mastodon.auth.authorization.MastodonAuthorizationBoundary
+import br.com.orcinus.orca.feature.registration.RegistrationFragment
+import br.com.orcinus.orca.platform.navigation.Navigator
 
-internal class DemoOrcaActivity : OrcaActivity() {
-  override val coreBinding = DemoCoreModule.boundTo<CoreModule, _>()
+internal class NavigatorMastodonAuthorizationBoundary(private val navigator: Navigator) :
+  MastodonAuthorizationBoundary {
+  override fun navigateToRegistration() {
+    RegistrationFragment.navigate(navigator)
+  }
 }

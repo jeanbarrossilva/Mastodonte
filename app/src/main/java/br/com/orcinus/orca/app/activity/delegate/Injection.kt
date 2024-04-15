@@ -39,12 +39,13 @@ import br.com.orcinus.orca.feature.settings.SettingsModule
 import br.com.orcinus.orca.feature.settings.termmuting.TermMutingModule
 import br.com.orcinus.orca.platform.navigation.navigator
 import br.com.orcinus.orca.std.injector.Injector
+import br.com.orcinus.orca.std.injector.module.binding.Binding
 
 internal interface Injection {
-  fun inject(activity: FragmentActivity, coreModule: CoreModule) {
+  fun inject(activity: FragmentActivity, coreBinding: Binding<CoreModule, *>) {
     val navigator = activity.navigator
     Injector.inject<Context> { activity }
-    Injector.register(coreModule)
+    Injector.register(coreBinding)
     Injector.register<FeedModule>(MainFeedModule(activity, navigator))
     Injector.register<GalleryModule>(MainGalleryModule(navigator))
     Injector.register<OngoingModule>(MainOngoingModule)

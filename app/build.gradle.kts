@@ -79,7 +79,10 @@ dependencies {
   "androidTestDemoImplementation"(project(":platform:navigation-test"))
   "androidTestDemoImplementation"(project(":platform:testing"))
   "androidTestDemoImplementation"(project(":platform:testing:compose"))
-  "androidTestDemoImplementation"(libs.android.compose.ui.test.manifest)
+
+  androidTestImplementation(project(":core:mastodon-test"))
+  androidTestImplementation(libs.android.compose.ui.test.manifest)
+  androidTestImplementation(libs.kotlin.test)
 
   "demoImplementation"(project(":platform:core"))
 
@@ -92,6 +95,8 @@ dependencies {
   implementation(project(":feature:gallery"))
   implementation(project(":feature:post-details"))
   implementation(project(":feature:profile-details"))
+  implementation(project(":feature:registration"))
+  implementation(project(":feature:registration:credentials"))
   implementation(project(":feature:registration:ongoing"))
   implementation(project(":feature:search"))
   implementation(project(":feature:settings"))
@@ -124,5 +129,6 @@ dependencies {
   testImplementation(project(":composite:timeline-test"))
   testImplementation(project(":platform:intents-test"))
   testImplementation(libs.android.test.core)
+  testImplementation(libs.kotlin.test)
   testImplementation(libs.robolectric)
 }

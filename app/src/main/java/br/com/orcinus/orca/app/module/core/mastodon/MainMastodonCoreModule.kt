@@ -13,9 +13,10 @@
  * not, see https://www.gnu.org/licenses.
  */
 
-package br.com.orcinus.orca.app.module.core
+package br.com.orcinus.orca.app.module.core.mastodon
 
 import android.content.Context
+import br.com.orcinus.orca.app.module.core.MainImageLoaderProviderFactory
 import br.com.orcinus.orca.core.auth.AuthenticationLock
 import br.com.orcinus.orca.core.mastodon.MastodonCoreModule
 import br.com.orcinus.orca.core.mastodon.auth.authentication.MastodonAuthenticator
@@ -24,35 +25,39 @@ import br.com.orcinus.orca.core.mastodon.instance.MastodonInstanceProvider
 import br.com.orcinus.orca.core.mastodon.instance.registration.MastodonRegistrar
 import br.com.orcinus.orca.core.sharedpreferences.actor.SharedPreferencesActorProvider
 import br.com.orcinus.orca.core.sharedpreferences.feed.profile.post.content.SharedPreferencesTermMuter
+import br.com.orcinus.orca.platform.navigation.Navigator
 import br.com.orcinus.orca.std.image.compose.async.AsyncImageLoader
 import br.com.orcinus.orca.std.injector.Injector
 import br.com.orcinus.orca.std.injector.module.injection.injectionOf
 
-internal object MainMastodonCoreModule :
+internal class MainMastodonCoreModule(private val navigator: Navigator) :
   MastodonCoreModule(
     injectionOf {
       MastodonInstanceProvider(
-        MainMastodonCoreModule.context,
-        MainMastodonCoreModule.authorizer,
-        MainMastodonCoreModule.authenticator,
-        MainMastodonCoreModule.actorProvider,
-        MainMastodonCoreModule.authenticationLock,
-        MainMastodonCoreModule.termMuter,
+        context,
+        authorizer,
+        authenticator,
+        actorProvider,
+        authenticationLock,
+        termMuter,
         AsyncImageLoader.Provider
       )
     },
-    injectionOf { MainMastodonCoreModule.authenticationLock },
-    injectionOf { MastodonRegistrar(MainMastodonCoreModule.context) },
-    injectionOf { MainMastodonCoreModule.termMuter }
+    injectionOf { authenticationLock },
+    injectionOf { MastodonRegistrar(context) },
+    injectionOf { termMuter },
+    injectionOf { NavigatorMastodonAuthorizationBoundary(navigator) }
   ) {
-  private val actorProvider by lazy {
-    SharedPreferencesActorProvider(context, MainImageLoaderProviderFactory)
-  }
-  private val authorizer by lazy { MastodonAuthorizer(context) }
-  private val authenticator by lazy { MastodonAuthenticator(context, authorizer, actorProvider) }
-  private val authenticationLock by lazy { AuthenticationLock(authenticator, actorProvider) }
-  private val termMuter by lazy { SharedPreferencesTermMuter(context) }
+  companion object {
+    private val actorProvider by lazy {
+      SharedPreferencesActorProvider(context, MainImageLoaderProviderFactory)
+    }
+    private val authorizer by lazy { MastodonAuthorizer(context) }
+    private val authenticator by lazy { MastodonAuthenticator(context, authorizer, actorProvider) }
+    private val authenticationLock by lazy { AuthenticationLock(authenticator, actorProvider) }
+    private val termMuter by lazy { SharedPreferencesTermMuter(context) }
 
-  private val context
-    get() = Injector.get<Context>()
+    private val context
+      get() = Injector.get<Context>()
+  }
 }

@@ -13,29 +13,28 @@
  * not, see https://www.gnu.org/licenses.
  */
 
+import br.com.orcinus.orca.namespaceFor
+
 plugins {
   alias(libs.plugins.android.library)
   alias(libs.plugins.kotlin.android)
-  alias(libs.plugins.kotlin.symbolProcessor)
 }
 
 android {
   buildFeatures.compose = true
   composeOptions.kotlinCompilerExtensionVersion = libs.versions.android.compose.compiler.get()
+  namespace = namespaceFor("core.mastodon.test")
   testOptions.unitTests.isIncludeAndroidResources = true
 }
 
 dependencies {
-  api(project(":composite:composable"))
-  api(project(":platform:navigation"))
-  api(project(":std:injector"))
+  api(libs.android.compose.ui.test.junit)
 
+  implementation(project(":core:mastodon"))
   implementation(project(":platform:autos"))
-  implementation(libs.android.fragment.ktx)
+  implementation(project(":platform:testing"))
 
-  ksp(project(":std:injector-processor"))
-
-  testImplementation(project(":platform:navigation-test"))
+  testImplementation(libs.android.compose.ui.test.manifest)
   testImplementation(libs.kotlin.test)
   testImplementation(libs.robolectric)
 }

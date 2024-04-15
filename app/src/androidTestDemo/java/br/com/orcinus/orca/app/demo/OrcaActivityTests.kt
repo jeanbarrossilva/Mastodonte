@@ -15,11 +15,24 @@
 
 package br.com.orcinus.orca.app.demo
 
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.runAndroidComposeUiTest
+import assertk.assertThat
+import assertk.assertions.isNotNull
 import br.com.orcinus.orca.app.activity.OrcaActivity
-import br.com.orcinus.orca.app.demo.module.core.DemoCoreModule
-import br.com.orcinus.orca.core.module.CoreModule
-import br.com.orcinus.orca.std.injector.module.binding.boundTo
+import br.com.orcinus.orca.core.mastodon.test.auth.authorization.onRegisterButton
+import br.com.orcinus.orca.feature.registration.RegistrationFragment
+import br.com.orcinus.orca.platform.navigation.test.isAt
+import kotlin.test.Test
 
-internal class DemoOrcaActivity : OrcaActivity() {
-  override val coreBinding = DemoCoreModule.boundTo<CoreModule, _>()
+internal class OrcaActivityTests {
+  @Test
+  fun navigatesToRegistrationWhenRequested() {
+    @OptIn(ExperimentalTestApi::class)
+    runAndroidComposeUiTest<OrcaActivity> {
+      onRegisterButton().performClick()
+      assertThat(activity).isNotNull().isAt(RegistrationFragment.ROUTE)
+    }
+  }
 }

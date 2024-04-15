@@ -21,7 +21,9 @@ import androidx.activity.viewModels
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.runtime.Composable
 import br.com.orcinus.orca.composite.composable.ComposableActivity
+import br.com.orcinus.orca.core.mastodon.MastodonCoreModule
 import br.com.orcinus.orca.core.mastodon.auth.authorization.viewmodel.MastodonAuthorizationViewModel
+import br.com.orcinus.orca.core.mastodon.authorizationBoundary
 import br.com.orcinus.orca.core.mastodon.instance.ContextualMastodonInstance
 import br.com.orcinus.orca.core.module.CoreModule
 import br.com.orcinus.orca.core.module.instanceProvider
@@ -34,6 +36,9 @@ import io.ktor.http.Url
  */
 class MastodonAuthorizationActivity internal constructor() :
   ComposableActivity(), OnAccessTokenRequestListener {
+  /** [MastodonCoreModule] that has been registered in the [Injector]. */
+  private val module by lazy { Injector.from<CoreModule>() as MastodonCoreModule }
+
   /**
    * [MastodonAuthorizationViewModel] from which the [Url] to the authorization webpage will be
    * obtained.
@@ -42,9 +47,6 @@ class MastodonAuthorizationActivity internal constructor() :
     viewModels<MastodonAuthorizationViewModel> {
       MastodonAuthorizationViewModel.createFactory(application, onAccessTokenRequestListener = this)
     }
-
-  /** [CustomTabsIntent] by which in-app browsing will be performed. */
-  private val customTabsIntent = CustomTabsIntent.Builder().build()
 
   /**
    * [IllegalStateException] thrown if the [MastodonAuthorizationActivity] has been started from a
@@ -60,12 +62,15 @@ class MastodonAuthorizationActivity internal constructor() :
 
   @Composable
   override fun Content() {
-    MastodonAuthorization(viewModel, onHelp = ::browseToHelpArticle)
+    MastodonAuthorization(
+      viewModel,
+      onNavigationToRegistration = module.authorizationBoundary()::navigateToRegistration
+    )
   }
 
   override fun onAccessTokenRequest() {
     val uri = Uri.parse("${viewModel.url}")
-    customTabsIntent.launchUrl(this, uri)
+    CustomTabsIntent.Builder().build().launchUrl(this, uri)
   }
 
   /**
@@ -82,23 +87,5 @@ class MastodonAuthorizationActivity internal constructor() :
       .authorizer
       .receive(accessToken)
     finish()
-  }
-
-  /**
-   * Helps the user by browsing to Mastodon's blog article that explains how the platform works.
-   *
-   * @see helpUri
-   */
-  private fun browseToHelpArticle() {
-    customTabsIntent.launchUrl(this, helpUri)
-  }
-
-  companion object {
-    /** [Uri] that leads to a blog article that explains how Mastodon works. */
-    internal val helpUri: Uri =
-      Uri.Builder()
-        .scheme("https")
-        .path("blog.joinmastodon.org/2018/08/mastodon-quick-start-guide")
-        .build()
   }
 }

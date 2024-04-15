@@ -23,6 +23,7 @@ import br.com.orcinus.orca.core.feed.profile.post.content.TermMuter
 import br.com.orcinus.orca.core.instance.Instance
 import br.com.orcinus.orca.core.instance.InstanceProvider
 import br.com.orcinus.orca.core.instance.registration.Registrar
+import br.com.orcinus.orca.core.mastodon.auth.authorization.MastodonAuthorizationBoundary
 import br.com.orcinus.orca.core.module.CoreModule
 import br.com.orcinus.orca.std.injector.module.Inject
 import br.com.orcinus.orca.std.injector.module.injection.Injection
@@ -36,10 +37,13 @@ import br.com.orcinus.orca.std.injector.module.injection.Injection
  * @param registrar [Registrar] for registering an [Account].
  * @param instanceProvider [InstanceProvider] that will provide the [Instance] in which the
  *   currently [authenticated][Actor.Authenticated] [Actor] is.
+ * @param authorizationBoundary [MastodonAuthorizationBoundary] by which navigation from
+ *   authorization can be performed.
  */
 open class MastodonCoreModule(
   @Inject internal val instanceProvider: Injection<InstanceProvider>,
   @Inject internal val authenticationLock: Injection<SomeAuthenticationLock>,
   @Inject internal val registrar: Injection<Registrar>,
-  @Inject internal val termMuter: Injection<TermMuter>
+  @Inject internal val termMuter: Injection<TermMuter>,
+  @Inject internal val authorizationBoundary: Injection<MastodonAuthorizationBoundary>
 ) : CoreModule(instanceProvider, authenticationLock, registrar, termMuter)

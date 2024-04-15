@@ -61,13 +61,10 @@ object Injector : Module() {
   /**
    * Registers the given [binding].
    *
-   * @param B Base [Module] to which the [Module] is bound to.
-   * @param A [Module] at the utmost bottom of the inheritance tree to which the [Module] is bound
-   *   to.
-   * @param binding [Binding] that associates the [Module] to its [A] and [B] types.
+   * @param binding [Binding] that associates the [Module] to both of its types.
    * @throws SelfRegistrationException If the [Module] is this [Injector].
    */
-  inline fun <reified B : Module, reified A : B> register(binding: Binding<B, A>) {
+  fun register(binding: SomeBinding) {
     if (binding.target != this) {
       registerWithoutSelfRegistrationInsurance(binding)
     } else {
@@ -111,15 +108,10 @@ object Injector : Module() {
   /**
    * Registers the given [binding] without ensuring that this [Module] isn't injecting itself.
    *
-   * @param B Base [Module] to which the [Module] is bound to.
-   * @param A [Module] at the utmost bottom of the inheritance tree to which the [Module] is bound
-   *   to.
-   * @param binding [Binding] that associates the [Module] to its [A] and [B] types.
+   * @param binding [Binding] that associates the [Module] to both of its types.
    */
   @PublishedApi
-  internal inline fun <reified B : Module, reified A : B> registerWithoutSelfRegistrationInsurance(
-    binding: Binding<B, A>
-  ) {
+  internal fun registerWithoutSelfRegistrationInsurance(binding: SomeBinding) {
     bindings.add(binding)
     injectDeclaredDependenciesOf(binding.target)
   }

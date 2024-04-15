@@ -25,14 +25,14 @@ import kotlinx.coroutines.launch
 
 internal interface BottomNavigation : Binding {
   fun navigateOnItemSelection(activity: FragmentActivity) {
-    binding?.bottomNavigationView?.setOnItemSelectedListener {
+    viewBinding?.bottomNavigationView?.setOnItemSelectedListener {
       navigate(activity, it.itemId)
       true
     }
   }
 
   fun selectDefaultItem() {
-    binding?.bottomNavigationView?.selectedItemId = R.id.feed
+    viewBinding?.bottomNavigationView?.selectedItemId = R.id.feed
   }
 
   private fun navigate(activity: FragmentActivity, @IdRes itemID: Int) {

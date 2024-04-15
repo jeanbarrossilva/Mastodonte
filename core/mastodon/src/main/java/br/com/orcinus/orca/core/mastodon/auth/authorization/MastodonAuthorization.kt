@@ -15,6 +15,7 @@
 
 package br.com.orcinus.orca.core.mastodon.auth.authorization
 
+import androidx.annotation.VisibleForTesting
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -64,17 +65,35 @@ import br.com.orcinus.orca.platform.autos.theme.MultiThemePreview
 import br.com.orcinus.orca.platform.focus.rememberImmediateFocusRequester
 
 /**
+ * Screen that asks for the [Domain] to which the user belongs (and to which an empty one is given).
+ *
+ * @param modifier [Modifier] to be applied to the underlying [Box].
+ */
+@Composable
+@VisibleForTesting
+fun MastodonAuthorization(modifier: Modifier = Modifier) {
+  MastodonAuthorization(
+    domain = "",
+    onDomainChange = {},
+    onNavigationToRegistration = {},
+    onSignIn = {},
+    modifier
+  )
+}
+
+/**
  * Screen that asks for the [Domain] to which the user belongs.
  *
  * @param viewModel [MastodonAuthorizationViewModel] to which updates to the inserted [Domain] will
  *   be sent.
- * @param onHelp Action to be performed when help is requested.
+ * @param onNavigationToRegistration Action to be performed when navigation to registration is
+ *   requested.
  * @param modifier [Modifier] to be applied to the underlying [Box].
  */
 @Composable
 internal fun MastodonAuthorization(
   viewModel: MastodonAuthorizationViewModel,
-  onHelp: () -> Unit,
+  onNavigationToRegistration: () -> Unit,
   modifier: Modifier = Modifier
 ) {
   val domain by viewModel.domainFlow.collectAsState()
@@ -82,7 +101,7 @@ internal fun MastodonAuthorization(
   MastodonAuthorization(
     domain,
     onDomainChange = viewModel::setDomain,
-    onHelp,
+    onNavigationToRegistration,
     onSignIn = viewModel::authorize,
     modifier
   )
@@ -94,14 +113,15 @@ internal fun MastodonAuthorization(
  * @param domain [String] version of the [Domain].
  * @param onDomainChange Callback run whenever the user inputs to the domain [FormTextField].
  * @param onSignIn Callback run whenever the sign-in [PrimaryButton] is clicked.
- * @param onHelp Action to be performed when help is requested.
+ * @param onNavigationToRegistration Action to be performed when navigation to registration is
+ *   requested.
  * @param modifier [Modifier] to be applied to the underlying [Box].
  */
 @Composable
 internal fun MastodonAuthorization(
   domain: String,
   onDomainChange: (domain: String) -> Unit,
-  onHelp: () -> Unit,
+  onNavigationToRegistration: () -> Unit,
   onSignIn: () -> Unit,
   modifier: Modifier = Modifier
 ) {
@@ -153,8 +173,8 @@ internal fun MastodonAuthorization(
               Text(stringResource(R.string.core_http_authorization_sign_in))
             }
 
-            SecondaryButton(onClick = onHelp) {
-              Text(stringResource(R.string.core_http_authorization_help))
+            SecondaryButton(onClick = onNavigationToRegistration) {
+              Text(stringResource(R.string.core_mastodon_authorization_register))
             }
           }
         }
@@ -204,5 +224,5 @@ internal fun MastodonAuthorization(
 @Composable
 @MultiThemePreview
 private fun MastodonAuthorizationPreview() {
-  AutosTheme { MastodonAuthorization(domain = "", onDomainChange = {}, onHelp = {}, onSignIn = {}) }
+  AutosTheme { MastodonAuthorization() }
 }

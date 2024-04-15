@@ -77,6 +77,7 @@ dependencies {
     because("Ktor references \"StaticLoggerBinder\" and it is missing on minification.")
   }
 
+  testImplementation(project(":core:mastodon-test"))
   testImplementation(project(":core:sample"))
   testImplementation(project(":core:sample-test"))
   testImplementation(project(":core-test"))

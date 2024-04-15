@@ -20,14 +20,21 @@ import androidx.fragment.app.viewModels
 import br.com.orcinus.orca.composite.composable.ComposableFragment
 import br.com.orcinus.orca.platform.navigation.Navigator
 import br.com.orcinus.orca.platform.navigation.transition.opening
+import br.com.orcinus.orca.std.injector.Injector
 
 class CredentialsFragment internal constructor() : ComposableFragment() {
+  private val module by lazy { Injector.from<CredentialsModule>() }
   private val viewModel by
     viewModels<CredentialsViewModel>(factoryProducer = CredentialsViewModel::createFactory)
 
   @Composable
   override fun Content() {
-    Credentials(viewModel)
+    Credentials(
+      viewModel,
+      onSubmission = {
+        module.boundary().navigateToOngoing(viewModel.emailFlow.value, viewModel.passwordFlow.value)
+      }
+    )
   }
 
   companion object {

@@ -25,7 +25,7 @@ import br.com.orcinus.orca.platform.navigation.argument
 import br.com.orcinus.orca.platform.navigation.transition.opening
 import br.com.orcinus.orca.std.injector.Injector
 
-internal class OngoingFragment private constructor() : ComposableFragment() {
+class OngoingFragment internal constructor() : ComposableFragment() {
   private val module by lazy { Injector.from<OngoingModule>() }
   private val email by argument<String>(EMAIL_KEY)
   private val password by argument<String>(PASSWORD_KEY)

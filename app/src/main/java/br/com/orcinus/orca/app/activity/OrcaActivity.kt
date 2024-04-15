@@ -21,20 +21,26 @@ import androidx.fragment.app.FragmentActivity
 import br.com.orcinus.orca.app.activity.delegate.BottomNavigation
 import br.com.orcinus.orca.app.activity.delegate.Injection
 import br.com.orcinus.orca.app.databinding.ActivityOrcaBinding
-import br.com.orcinus.orca.app.module.core.MainMastodonCoreModule
+import br.com.orcinus.orca.app.module.core.mastodon.MainMastodonCoreModule
+import br.com.orcinus.orca.core.mastodon.MastodonCoreModule
 import br.com.orcinus.orca.core.module.CoreModule
+import br.com.orcinus.orca.platform.navigation.navigator
+import br.com.orcinus.orca.std.injector.module.binding.Binding
+import br.com.orcinus.orca.std.injector.module.binding.boundTo
 
 internal open class OrcaActivity : FragmentActivity(), Injection, BottomNavigation {
-  protected open val coreModule: CoreModule = MainMastodonCoreModule
+  protected open val coreBinding: Binding<CoreModule, *> by lazy {
+    MainMastodonCoreModule(navigator).boundTo<_, MastodonCoreModule>()
+  }
 
-  override var binding: ActivityOrcaBinding? = null
+  override var viewBinding: ActivityOrcaBinding? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     WindowCompat.setDecorFitsSystemWindows(window, false)
     bindView(this)
-    setContentView(binding?.root)
-    inject(this, coreModule)
+    setContentView(viewBinding?.root)
+    inject(this, coreBinding)
     navigateOnItemSelection(this)
     selectDefaultItem()
   }

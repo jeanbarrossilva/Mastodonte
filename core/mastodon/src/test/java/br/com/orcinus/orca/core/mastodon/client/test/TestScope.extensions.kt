@@ -19,6 +19,7 @@ import br.com.orcinus.orca.core.auth.AuthenticationLock
 import br.com.orcinus.orca.core.auth.actor.Actor
 import br.com.orcinus.orca.core.auth.actor.ActorProvider
 import br.com.orcinus.orca.core.mastodon.MastodonCoreModule
+import br.com.orcinus.orca.core.mastodon.auth.authorization.NoOpMastodonAuthorizationBoundary
 import br.com.orcinus.orca.core.mastodon.client.MastodonClient
 import br.com.orcinus.orca.core.mastodon.client.authenticateAndGet
 import br.com.orcinus.orca.core.mastodon.client.authenticateAndPost
@@ -134,7 +135,8 @@ private fun <T : Actor> runCoreHttpClientTest(
       injectionOf { TestMastodonInstanceProvider(authorizer, authenticator, authenticationLock) },
       injectionOf { authenticationLock },
       injectionOf { SampleRegistrar },
-      injectionOf { SampleTermMuter() }
+      injectionOf { SampleTermMuter() },
+      injectionOf { NoOpMastodonAuthorizationBoundary }
     )
   Injector.register<CoreModule>(module)
   runTest { MastodonClientTestScope(delegate = this, instance.client, actor).body() }

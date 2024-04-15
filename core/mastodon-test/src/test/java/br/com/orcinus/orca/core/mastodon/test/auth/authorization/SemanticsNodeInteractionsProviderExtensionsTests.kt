@@ -1,5 +1,5 @@
 /*
- * Copyright © 2023–2024 Orcinus
+ * Copyright © 2024 Orcinus
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -13,20 +13,26 @@
  * not, see https://www.gnu.org/licenses.
  */
 
-package br.com.orcinus.orca.app
+package br.com.orcinus.orca.core.mastodon.test.auth.authorization
 
-import androidx.test.core.app.launchActivity
-import br.com.orcinus.orca.app.activity.OrcaActivity
-import br.com.orcinus.orca.core.mastodon.auth.authorization.MastodonAuthorizationActivity
-import br.com.orcinus.orca.platform.intents.test.intendStartingOf
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.junit4.createComposeRule
+import br.com.orcinus.orca.core.mastodon.auth.authorization.MastodonAuthorization
+import br.com.orcinus.orca.platform.autos.theme.AutosTheme
 import kotlin.test.Test
+import org.junit.Rule
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
-internal class OrcaActivityTests {
+internal class SemanticsNodeInteractionsProviderExtensionsTests {
+  @get:Rule val composeRule = createComposeRule()
+
   @Test
-  fun navigatesToAuthorization() {
-    intendStartingOf<MastodonAuthorizationActivity> { launchActivity<OrcaActivity>().close() }
+  fun findsRegisterButton() {
+    composeRule
+      .apply { setContent { AutosTheme { MastodonAuthorization() } } }
+      .onRegisterButton()
+      .assertIsDisplayed()
   }
 }
