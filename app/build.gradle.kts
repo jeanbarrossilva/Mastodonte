@@ -76,11 +76,11 @@ dependencies {
   "androidTestDemoImplementation"(project(":composite:timeline-test"))
   "androidTestDemoImplementation"(project(":feature:gallery-test"))
   "androidTestDemoImplementation"(project(":platform:intents-test"))
-  "androidTestDemoImplementation"(project(":platform:navigation-test"))
   "androidTestDemoImplementation"(project(":platform:testing"))
   "androidTestDemoImplementation"(project(":platform:testing:compose"))
 
   androidTestImplementation(project(":core:mastodon-test"))
+  androidTestImplementation(project(":platform:navigation-test"))
   androidTestImplementation(libs.android.compose.ui.test.manifest)
   androidTestImplementation(libs.kotlin.test)
 
