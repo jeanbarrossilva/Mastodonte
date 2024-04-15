@@ -119,12 +119,11 @@ object Injector : Module() {
   /**
    * Injects the dependencies declared within the given [module].
    *
-   * @param T [Module] into which its dependencies will be injected.
    * @param module [Module] whose dependencies will be injected into it.
    */
   @PublishedApi
-  internal inline fun <reified T : Module> injectDeclaredDependenciesOf(module: T) {
-    T::class
+  internal fun injectDeclaredDependenciesOf(module: Module) {
+    module::class
       .memberProperties
       .filterIsInjection()
       .map { it.access { get(module) } }

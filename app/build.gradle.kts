@@ -114,17 +114,13 @@ dependencies {
   releaseImplementation(libs.kotlin.reflect)
 
   "testDemoImplementation"(project(":composite:timeline"))
-  "testDemoImplementation"(project(":composite:timeline-test"))
   "testDemoImplementation"(project(":core:sample-test"))
   "testDemoImplementation"(project(":feature:feed-test"))
   "testDemoImplementation"(project(":feature:gallery-test"))
-  "testDemoImplementation"(project(":platform:intents-test"))
   "testDemoImplementation"(project(":platform:navigation-test"))
   "testDemoImplementation"(project(":platform:testing"))
   "testDemoImplementation"(libs.android.test.espresso.core)
-  "testDemoImplementation"(libs.kotlin.test)
   "testDemoImplementation"(libs.openTest4J)
-  "testDemoImplementation"(libs.robolectric)
 
   testImplementation(project(":composite:timeline-test"))
   testImplementation(project(":platform:intents-test"))

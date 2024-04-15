@@ -13,7 +13,7 @@
  * not, see https://www.gnu.org/licenses.
  */
 
-package br.com.orcinus.orca.app.demo
+package br.com.orcinus.orca.app
 
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.performClick

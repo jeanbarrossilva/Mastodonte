@@ -24,6 +24,7 @@ import br.com.orcinus.orca.app.module.feature.feed.MainFeedModule
 import br.com.orcinus.orca.app.module.feature.gallery.MainGalleryModule
 import br.com.orcinus.orca.app.module.feature.postdetails.MainPostDetailsModule
 import br.com.orcinus.orca.app.module.feature.profiledetails.MainProfileDetailsModule
+import br.com.orcinus.orca.app.module.feature.registration.MainRegistrationModule
 import br.com.orcinus.orca.app.module.feature.registration.ongoing.MainOngoingModule
 import br.com.orcinus.orca.app.module.feature.search.MainSearchModule
 import br.com.orcinus.orca.app.module.feature.settings.MainSettingsModule
@@ -33,6 +34,7 @@ import br.com.orcinus.orca.feature.feed.FeedModule
 import br.com.orcinus.orca.feature.gallery.GalleryModule
 import br.com.orcinus.orca.feature.postdetails.PostDetailsModule
 import br.com.orcinus.orca.feature.profiledetails.ProfileDetailsModule
+import br.com.orcinus.orca.feature.registration.RegistrationModule
 import br.com.orcinus.orca.feature.registration.ongoing.OngoingModule
 import br.com.orcinus.orca.feature.search.SearchModule
 import br.com.orcinus.orca.feature.settings.SettingsModule
@@ -51,6 +53,7 @@ internal interface Injection {
     Injector.register<OngoingModule>(MainOngoingModule)
     Injector.register<PostDetailsModule>(MainPostDetailsModule(activity, navigator))
     Injector.register<ProfileDetailsModule>(MainProfileDetailsModule(activity, navigator))
+    Injector.register<RegistrationModule>(MainRegistrationModule(navigator))
     Injector.register<SearchModule>(MainSearchModule(navigator))
     Injector.register<SettingsModule>(MainSettingsModule(activity))
     Injector.register<TermMutingModule>(MainTermMutingModule)

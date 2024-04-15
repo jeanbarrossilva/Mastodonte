@@ -29,14 +29,11 @@ import kotlin.reflect.jvm.jvmErasure
  *   automatically injected into the [Module] in which they were declared; and
  * - have a return type of [Injection], which allows for operations to be performed within the
  *   [Module] and provides a dependency lazily.
- *
- * @param T [Module] into which the resulting dependencies of the [KProperty1]s' values will be
- *   injected.
  */
 @PublishedApi
-internal fun <T : Module> Iterable<KProperty1<T, *>>.filterIsInjection():
-  List<KProperty1<T, Injection<Any>>> {
+internal fun Iterable<KProperty1<out Module, *>>.filterIsInjection():
+  List<KProperty1<Module, Injection<Any>>> {
   @Suppress("UNCHECKED_CAST")
   return filter { it.hasAnnotation<Inject>() && it.returnType.jvmErasure == Injection::class }
-    as List<KProperty1<T, Injection<Any>>>
+    as List<KProperty1<Module, Injection<Any>>>
 }
